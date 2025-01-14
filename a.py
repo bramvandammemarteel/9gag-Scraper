@@ -4,9 +4,12 @@ import requests
 import time
 import os
 from datetime import datetime
+from PIL import Image, ImageDraw, ImageFont
 
 driver = webdriver.Chrome()
 url = "https://9gag.com/trending"
+posts_needed = 15
+watermark_content = "9gag Scraper"
 
 current_date = datetime.now().strftime("%Y-%m-%d")
 output_folder = os.path.join(os.getcwd(), current_date)
@@ -24,7 +27,6 @@ except Exception:
     print("No cookies popup found.")
 
 scroll_pause_time = 2
-posts_needed = 10
 last_height = driver.execute_script("return document.body.scrollHeight")
 while True:
     posts = driver.find_elements(By.XPATH, "//article")
@@ -39,6 +41,26 @@ while True:
 
 print(f"Found {len(posts)} posts. Proceeding to scrape the top {posts_needed}.")
 
+def add_watermark(image_path, text):
+    with Image.open(image_path) as img:
+        draw = ImageDraw.Draw(img)
+        
+        try:
+            font = ImageFont.truetype("arial.ttf", size=30)
+        except IOError:
+            font = ImageFont.load_default()
+        
+        text_width, text_height = draw.textbbox((0, 0), text, font=font)[2:]
+
+        width, height = img.size
+
+        x = width - text_width - 20
+        y = height - text_height - 20
+
+        draw.text((x, y), text, font=font, fill=(255, 218, 33))
+        img.save(image_path)
+        print(f"Watermark added to: {image_path}")
+
 for index, post in enumerate(posts[:posts_needed]):
     try:
         try:
@@ -50,6 +72,7 @@ for index, post in enumerate(posts[:posts_needed]):
                 with open(img_path, "wb") as file:
                     file.write(img_data)
                 print(f"Downloaded: {img_path}")
+                add_watermark(img_path, watermark_content)
         except Exception as e:
             print(f"No image found in post {index + 1}: {e}")
 
