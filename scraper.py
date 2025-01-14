@@ -68,7 +68,7 @@ def add_video_watermark(video_path, output_path, text):
     command = [
         "ffmpeg",
         "-i", video_path,
-        "-vf", f"drawtext=text='{text}':fontfile='{font_path}':fontcolor=yellow:fontsize=24:x=(w-text_w)-10:y=(h-text_h)-10'",
+        "-vf", f"drawtext=text='{text}':fontfile='{font_path}':fontcolor=yellow:fontsize=36:x=(w-text_w)/2:y=h-text_h-50",
         "-codec:a", "copy",
         output_path
     ]
