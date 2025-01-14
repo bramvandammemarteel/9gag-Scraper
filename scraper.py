@@ -47,7 +47,7 @@ def add_watermark(image_path, text):
         draw = ImageDraw.Draw(img)
         
         try:
-            font = ImageFont.truetype("arial.ttf", size=30)
+            font = ImageFont.truetype("arial.ttf", size=36)
         except IOError:
             font = ImageFont.load_default()
         
@@ -55,12 +55,17 @@ def add_watermark(image_path, text):
 
         width, height = img.size
 
-        x = width - text_width - 20
-        y = height - text_height - 20
+        x = (width - text_width) / 2
+        y = height - text_height - 50  
 
-        draw.text((x, y), text, font=font, fill=(255, 218, 33))
+        shadow_offset = 2
+        draw.text((x + shadow_offset, y + shadow_offset), text, font=font, fill="black")  
+        draw.text((x, y), text, font=font, fill=(255, 218, 33))  
+
         img.save(image_path)
         print(f"Watermark added to: {image_path}")
+
+
 
 def add_video_watermark(video_path, output_path, text):
     font_path = "C\\:/Windows/Fonts/arial.ttf"
@@ -68,7 +73,7 @@ def add_video_watermark(video_path, output_path, text):
     command = [
         "ffmpeg",
         "-i", video_path,
-        "-vf", f"drawtext=text='{text}':fontfile='{font_path}':fontcolor=yellow:fontsize=36:x=(w-text_w)/2:y=h-text_h-50",
+        "-vf", f"drawtext=text='{text}':fontfile='{font_path}':fontcolor=yellow:fontsize=36:x=(w-text_w)/2:y=h-text_h-50:shadowx=2:shadowy=2:shadowcolor=black",
         "-codec:a", "copy",
         output_path
     ]
@@ -78,6 +83,7 @@ def add_video_watermark(video_path, output_path, text):
         print(f"Watermark added successfully: {output_path}")
     except subprocess.CalledProcessError as e:
         print(f"Error adding watermark: {e}")
+
 
 for index, post in enumerate(posts[:posts_needed]):
     try:
