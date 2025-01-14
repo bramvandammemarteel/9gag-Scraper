@@ -5,10 +5,11 @@ import time
 import os
 from datetime import datetime
 from PIL import Image, ImageDraw, ImageFont
+import subprocess
 
 driver = webdriver.Chrome()
 url = "https://9gag.com/trending"
-posts_needed = 15
+posts_needed = 5
 watermark_content = "9gag Scraper"
 
 current_date = datetime.now().strftime("%Y-%m-%d")
@@ -61,6 +62,23 @@ def add_watermark(image_path, text):
         img.save(image_path)
         print(f"Watermark added to: {image_path}")
 
+def add_video_watermark(video_path, output_path, text):
+    font_path = "C\\:/Windows/Fonts/arial.ttf"
+
+    command = [
+        "ffmpeg",
+        "-i", video_path,
+        "-vf", f"drawtext=text='{text}':fontfile='{font_path}':fontcolor=yellow:fontsize=24:x=(w-text_w)-10:y=(h-text_h)-10'",
+        "-codec:a", "copy",
+        output_path
+    ]
+
+    try:
+        subprocess.run(command, check=True, shell=True)
+        print(f"Watermark added successfully: {output_path}")
+    except subprocess.CalledProcessError as e:
+        print(f"Error adding watermark: {e}")
+
 for index, post in enumerate(posts[:posts_needed]):
     try:
         try:
@@ -85,10 +103,14 @@ for index, post in enumerate(posts[:posts_needed]):
                 with open(video_path, "wb") as file:
                     file.write(video_data)
                 print(f"Downloaded: {video_path}")
+                
+                watermarked_video_path = os.path.join(output_folder, f"post_video_{index + 1}_watermarked.mp4")
+                add_video_watermark(video_path, watermarked_video_path, watermark_content)
         except Exception as e:
             print(f"No video found in post {index + 1}: {e}")
 
     except Exception as e:
         print(f"Failed to download media from post {index + 1}: {e}")
+
 
 driver.quit()
