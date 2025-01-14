@@ -65,8 +65,6 @@ def add_watermark(image_path, text):
         img.save(image_path)
         print(f"Watermark added to: {image_path}")
 
-
-
 def add_video_watermark(video_path, output_path, text):
     font_path = "C\\:/Windows/Fonts/arial.ttf"
 
@@ -81,9 +79,11 @@ def add_video_watermark(video_path, output_path, text):
     try:
         subprocess.run(command, check=True, shell=True)
         print(f"Watermark added successfully: {output_path}")
+        os.remove(video_path)
+        os.rename(output_path, video_path) 
+        print(f"Replaced original video with watermarked version: {video_path}")
     except subprocess.CalledProcessError as e:
         print(f"Error adding watermark: {e}")
-
 
 for index, post in enumerate(posts[:posts_needed]):
     try:
@@ -117,6 +117,5 @@ for index, post in enumerate(posts[:posts_needed]):
 
     except Exception as e:
         print(f"Failed to download media from post {index + 1}: {e}")
-
 
 driver.quit()
