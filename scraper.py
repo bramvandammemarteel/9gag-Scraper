@@ -9,7 +9,7 @@ import subprocess
 
 driver = webdriver.Chrome()
 url = "https://9gag.com/trending"
-posts_needed = 5
+posts_needed = 10
 watermark_content = "9gag Scraper"
 
 current_date = datetime.now().strftime("%Y-%m-%d")
@@ -119,3 +119,4 @@ for index, post in enumerate(posts[:posts_needed]):
         print(f"Failed to download media from post {index + 1}: {e}")
 
 driver.quit()
+
