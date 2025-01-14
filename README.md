@@ -26,8 +26,14 @@ A Python script that scrapes the top trending posts from 9GAG's Trending page, d
    - Download and install [Google Chrome](https://www.google.com/chrome/).
 
 3. **ChromeDriver**:
+
    - Download ChromeDriver compatible with your Chrome version from [chromedriver.chromium.org](https://chromedriver.chromium.org/downloads).
-   - Add the ChromeDriver executable to your system's PATH.
+   - Add the ChromeDriver executable to your system's variables PATH.
+
+4. **FFmpeg**:
+   - Download FFmpeg from [FFmpeg Builds](https://www.gyan.dev/ffmpeg/builds/).
+   - Extract the downloaded zip file and move the `bin` folder to a desired location, such as `C:\ffmpeg\bin`.
+   - Add the path to the `bin` folder to your system's PATH. For example, `C:\ffmpeg\bin`.
 
 ---
 
@@ -40,5 +46,4 @@ A Python script that scrapes the top trending posts from 9GAG's Trending page, d
    cd 9gag-scraper
    pip install -r requirements.txt
    python scraper.py
-
    ```
